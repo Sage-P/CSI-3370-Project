@@ -166,7 +166,7 @@ class _LandingPageState extends State<LandingPage> {
             // image below the top bar
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: ExactAssetImage("lib/assets/images/background.jpg"),
+                image: ExactAssetImage("lib/assets/images/home.jpg"),
                 fit: BoxFit.cover,
               ),
             ),

@@ -145,7 +145,7 @@ class Login extends StatelessWidget {
             // image below the top bar
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: ExactAssetImage("lib/assets/images/background.jpg"),
+                image: ExactAssetImage("lib/assets/images/login.jpg"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -166,7 +166,7 @@ class Login extends StatelessWidget {
             key: _formKey,
             child: Scrollbar(
               child: Align(
-                alignment: Alignment.center,
+                alignment: FractionalOffset(0.2, 0.5),
                 child: Card(
                   child: SingleChildScrollView(
                     padding: EdgeInsets.all(16),
