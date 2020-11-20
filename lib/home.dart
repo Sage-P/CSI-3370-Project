@@ -121,7 +121,9 @@ class _LandingPageState extends State<LandingPage> {
                                 : _isHovering[1] = false;
                           });
                         },
-                        onTap: () {},
+                        onTap: () {
+                          navigateToLogin(context);
+                        },
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
