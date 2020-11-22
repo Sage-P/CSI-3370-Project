@@ -38,42 +38,48 @@ class NetExpenses {
     return newExpense;
   }
 
-  void removeExpense(Expense e) {
-    _netExpenses.remove(e);
+  bool removeExpense(Expense e) {
+    return _netExpenses.remove(e);
   }
 
+  // Decreasing order
   void sortExpensesByAmount() {
     _netExpenses
-        .sort((Expense a, Expense b) => a.getAmount().compareTo(b.getAmount()));
+        .sort((Expense a, Expense b) => b.getAmount().compareTo(a.getAmount()));
   }
 
+  // Decreasing order
   void sortExpensesByMonthlyAmount() {
     _netExpenses.sort((Expense a, Expense b) =>
-        a.getMonthlyAmount().compareTo(b.getMonthlyAmount()));
+        b.getMonthlyAmount().compareTo(a.getMonthlyAmount()));
   }
 
+  // Alphabetically by Category
   void sortExpensesByCategory() {
     _netExpenses.sort((Expense a, Expense b) =>
         a.getCategory().toString().compareTo(b.getCategory().toString()));
   }
 
-  void hideExpense(Expense e) {
-    if (!e.isHidden()) {
-      e.toggleVisibility();
-    }
+  // Alphabetically by Description
+  void sortExpensesByDescription() {
+    _netExpenses.sort((Expense a, Expense b) =>
+        a.getDescription().compareTo(b.getDescription()));
   }
 
-  void unhideExpense(Expense e) {
-    if (e.isHidden()) {
-      e.toggleVisibility();
-    }
+  void toggleExpense(Expense e) {
+    e.toggleVisibility();
   }
 
   String toString() {
     String s = '';
     for (Expense e in _netExpenses) {
+      if (e.isHidden()) {
+        s += "[HIDDEN] ";
+      }
       s += e.toString() + '\n';
     }
+    s += '\n Net Expenses per Month: \$' +
+        (getNetExpensesMonthlyAmount() / 100).toStringAsFixed(2);
     return s;
   }
 }

@@ -9,9 +9,9 @@ class Expense {
   int _monthlyAmount; // Expense amount as monthly in cents
   bool _isHidden;
 
-  Expense(
-      int amount, Frequency frequency, Category category, String description) {
-    _amount = amount;
+  Expense(int amountInCents, Frequency frequency, Category category,
+      String description) {
+    _amount = amountInCents;
     _frequency = frequency;
     _category = category;
     _description = description;
