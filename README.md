@@ -13,15 +13,15 @@ The main goal of this application is to help students track their money and keep
 
 * FRONT END - [Flutter](https://flutter.dev/), [Visual Studio Code](https://code.visualstudio.com/)
 * BACK END - [Google Cloud Platform](https://cloud.google.com/), [Firebase](https://firebase.google.com/)
-* DATABASE - [Cloud Firestore (NoSQL)] (https://firebase.google.com/docs/firestore)
+* DATABASE - [Cloud Firestore (NoSQL)](https://firebase.google.com/docs/firestore)
 * DESIGN - [StarUML](https://staruml.io/)
 * COLLABORATION - [Discord](https://discord.com), [GitHub](https://github.com/), [Google Drive](https://drive.google.com), [Google Docs](https://docs.google.com), [Google Slides](https://slides.google.com)
 
 ## Acknowledgments/Resource Crediting
 
 * Freepik
-* Flutter Dev and Flutter YouTube (https://www.youtube.com/playlist?list=PLjxrf2q8roU23XGwz3Km7sQZFTdB996iG)
-* Devefy (YouTube) (https://www.youtube.com/watch?v=87cz-ihAJ-8)
-* Academind (YouTube) (https://www.youtube.com/watch?v=x0uinJvhNxI)
+* Flutter Dev and [Flutter YouTube](https://www.youtube.com/playlist?list=PLjxrf2q8roU23XGwz3Km7sQZFTdB996iG)
+* [Devefy](https://www.youtube.com/watch?v=87cz-ihAJ-8)
+* [Academind](https://www.youtube.com/watch?v=x0uinJvhNxI)
 
 
