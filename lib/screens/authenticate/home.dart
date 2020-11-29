@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:modoh/login.dart';
+import 'package:modoh/screens/authenticate/login.dart';
 
 void main() {
   runApp(Home());

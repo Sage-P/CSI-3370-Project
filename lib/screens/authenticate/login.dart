@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:modoh/home.dart';
+import 'package:modoh/screens/authenticate/home.dart';
+import 'package:modoh/services/auth.dart';
 
 // ignore: must_be_immutable
 class Login extends StatelessWidget {
@@ -14,8 +15,9 @@ class Login extends StatelessWidget {
     false
   ];
   final _formKey = GlobalKey<FormState>();
-  String email;
-  String password;
+  String _email;
+  String _password;
+  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +198,7 @@ class Login extends StatelessWidget {
                               ),
                               onChanged: (value) {
                                 setState(() {
-                                  email = value;
+                                  _email = value;
                                 });
                               },
                             ),
@@ -209,7 +211,7 @@ class Login extends StatelessWidget {
                               ),
                               obscureText: true,
                               onChanged: (value) {
-                                password = value;
+                                _password = value;
                               },
                             ),
                             Container(
@@ -248,8 +250,15 @@ class Login extends StatelessWidget {
                                                 ),
                                               ),
                                             ),
-                                            onPressed: () {
-                                              //TODO
+                                            onPressed: () async {
+                                              dynamic result =
+                                                  await _auth.signInAnon();
+                                              if (result == null) {
+                                                print('Error signing in!');
+                                              } else {
+                                                print('Signed in!');
+                                                print(result);
+                                              }
                                             }),
                                       ),
                                     ],
