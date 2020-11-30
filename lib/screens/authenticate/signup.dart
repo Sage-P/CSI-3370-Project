@@ -1,31 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:modoh/screens/authenticate/home.dart';
 import 'package:modoh/screens/authenticate/login.dart';
-import 'package:modoh/screens/authenticate/signup.dart';
+import 'package:modoh/services/auth.dart';
 
-void main() {
-  runApp(Home());
-}
-
-class Home extends StatelessWidget {
+class SignUp extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MODOH - The Budgeting Tool for Students',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: LandingPage(),
-    );
-  }
+  _SignUpState createState() => _SignUpState();
 }
 
-class LandingPage extends StatefulWidget {
-  @override
-  _LandingPageState createState() => _LandingPageState();
-}
-
-class _LandingPageState extends State<LandingPage> {
+class _SignUpState extends State<SignUp> {
   final List _isHovering = [
     false,
     false,
@@ -36,6 +19,10 @@ class _LandingPageState extends State<LandingPage> {
     false,
     false
   ];
+  final _formKey = GlobalKey<FormState>();
+  String _email;
+  String _password;
+  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +154,7 @@ class _LandingPageState extends State<LandingPage> {
             // image below the top bar
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: ExactAssetImage("lib/assets/images/home.jpg"),
+                image: ExactAssetImage("lib/assets/images/login.jpg"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -184,19 +171,22 @@ class _LandingPageState extends State<LandingPage> {
               ),
             ),
           ),
-          Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
+          Form(
+            key: _formKey,
+            child: Scrollbar(
+              child: Align(
+                alignment: FractionalOffset(0.2, 0.5),
+                child: Card(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.all(16),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 400),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            "A better way to budget",
+                            "Welcome!",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Color(0xff8adc16),
@@ -205,70 +195,99 @@ class _LandingPageState extends State<LandingPage> {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            "A simple, intuitive budgeting tool for the everyday student.",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Color(0xff37474f),
-                              fontSize: 24,
-                              fontFamily: "Roboto",
-                              fontWeight: FontWeight.w400,
+                          SizedBox(height: 10),
+                          ...[
+                            TextFormField(
+                              decoration: InputDecoration(
+                                filled: true,
+                                hintText: 'Enter an email...',
+                                labelText: 'Email',
+                              ),
+                              onChanged: (value) {
+                                setState(() {
+                                  _email = value;
+                                });
+                              },
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Color(0xff37474f),
-                      ),
-                      padding: const EdgeInsets.only(
-                        left: 25,
-                        right: 24,
-                        top: 18,
-                        bottom: 17,
-                      ),
-                      child: FlatButton(
-                          color: Color(0xff37474f),
-                          child: SizedBox(
-                            width: 231,
-                            child: Text(
-                              "Sign Up Now",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Color(0xff8adc16),
-                                fontSize: 24,
-                                fontFamily: "Roboto",
-                                fontWeight: FontWeight.w500,
+                            TextFormField(
+                              decoration: InputDecoration(
+                                border: const OutlineInputBorder(),
+                                filled: true,
+                                hintText: 'Enter a password...',
+                                labelText: 'Password',
+                              ),
+                              obscureText: true,
+                              onChanged: (value) {
+                                _password = value;
+                              },
+                            ),
+                            Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          color: Color(0xff37474f),
+                                        ),
+                                        padding: const EdgeInsets.only(
+                                          left: 25,
+                                          right: 24,
+                                          top: 18,
+                                          bottom: 17,
+                                        ),
+                                        child: FlatButton(
+                                            color: Color(0xff37474f),
+                                            child: SizedBox(
+                                              width: 231,
+                                              child: Text(
+                                                "Sign Up",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: Color(0xff8adc16),
+                                                  fontSize: 24,
+                                                  fontFamily: "Roboto",
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                            onPressed: () async {
+                                              dynamic result = await _auth
+                                                  .registerWithEmailAndPassword(
+                                                      _email, _password);
+                                              if (result == null) {
+                                                print('Error signing in!');
+                                              } else {
+                                                print('Signed up!');
+                                                print(result.email);
+                                              }
+                                            }),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                          onPressed: () {
-                            navigateToSignUp(context);
-                          }),
+                          ].expand(
+                            (widget) => [
+                              widget,
+                              SizedBox(
+                                height: 24,
+                              )
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                  ],
+                  ),
                 ),
-              ],
+              ),
             ),
           ),
         ],
@@ -281,11 +300,17 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Future navigateToHome(context) async {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => LandingPage()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
   }
 
   Future navigateToLogIn(context) async {
     Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
   }
 }
+
+// // ignore: must_be_immutable
+// class Login extends StatelessWidget {
+
+// }
+
+// void setState(Null Function() param0) {}
