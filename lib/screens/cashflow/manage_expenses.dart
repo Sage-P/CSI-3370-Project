@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:modoh/models/category.dart';
 import 'package:modoh/models/expense.dart';
@@ -15,6 +17,7 @@ class ManageExpenses extends StatefulWidget {
 class _ManageExpensesState extends State<ManageExpenses> {
   NetExpenses _netExpenses;
   List<Expense> _expenseList;
+  int _selectedIndex;
   final List _isHovering = [
     false,
     false,
@@ -42,92 +45,132 @@ class _ManageExpensesState extends State<ManageExpenses> {
     });
     var screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: PreferredSize(
-        preferredSize: Size(screenSize.width, 1000),
-        child: Container(
-          color: Color(0xff37474f),
-          child: Padding(
-            padding: EdgeInsets.only(
-              top: 10,
-              bottom: 10,
-              right: 20,
-              left: 20,
-            ),
-            child: Row(
-              children: [
-                FlatButton(
-                    child: Text(
-                      'MODOH',
-                      style: TextStyle(
-                        color: Color(0xff8adc16),
-                        fontSize: 30,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 3,
-                      ),
-                    ),
-                    onPressed: () {
-                      navigateToHome(context);
-                    }),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      InkWell(
-                        onHover: (value) {
-                          setState(() {
-                            value
-                                ? _isHovering[0] = true
-                                : _isHovering[0] = false;
-                          });
-                        },
-                        onTap: () {
-                          navigateToHome(context);
-                        },
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Log Out',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontFamily: 'Roboto',
-                                color: _isHovering[0]
-                                    ? Colors.white
-                                    : Color(0xff8adc16),
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Visibility(
-                              maintainAnimation: true,
-                              maintainState: true,
-                              maintainSize: true,
-                              visible: _isHovering[0],
-                              child: Container(
-                                height: 2,
-                                width: 20,
-                                color: Color(0xff8adc16),
-                              ),
-                            )
-                          ],
+        extendBodyBehindAppBar: true,
+        appBar: PreferredSize(
+          preferredSize: Size(screenSize.width, 1000),
+          child: Container(
+            color: Color(0xff37474f),
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: 10,
+                bottom: 10,
+                right: 20,
+                left: 20,
+              ),
+              child: Row(
+                children: [
+                  FlatButton(
+                      child: Text(
+                        'MODOH',
+                        style: TextStyle(
+                          color: Color(0xff8adc16),
+                          fontSize: 30,
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 3,
                         ),
                       ),
-                    ],
+                      onPressed: () {
+                        navigateToHome(context);
+                      }),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        InkWell(
+                          onHover: (value) {
+                            setState(() {
+                              value
+                                  ? _isHovering[0] = true
+                                  : _isHovering[0] = false;
+                            });
+                          },
+                          onTap: () {
+                            navigateToHome(context);
+                          },
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Log Out',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontFamily: 'Roboto',
+                                  color: _isHovering[0]
+                                      ? Colors.white
+                                      : Color(0xff8adc16),
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Visibility(
+                                maintainAnimation: true,
+                                maintainState: true,
+                                maintainSize: true,
+                                visible: _isHovering[0],
+                                child: Container(
+                                  height: 2,
+                                  width: 20,
+                                  color: Color(0xff8adc16),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        children: _expenseList.map((Expense e) {
-          return ExpenseListItem(expense: e);
-        }).toList(),
-      ),
-    );
+        body: Center(
+          child: ListView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            itemCount: _netExpenses.size(),
+            itemBuilder: (context, index) {
+              Expense e = _expenseList[index];
+              IconData categoryIcon = getIcon(e.getCategory());
+              return Container(
+                width: 500.0,
+                child: ListTile(
+                  enabled: true,
+                  onTap: () {
+                    setState(() {
+                      _selectedIndex = index;
+                    });
+                  },
+                  selected: index == _selectedIndex,
+                  selectedTileColor: Color(0xffe1e7ea),
+                  leading: Column(
+                    children: [
+                      Icon(
+                        categoryIcon,
+                        color: Color(0xff37474f),
+                        size: 24,
+                      ),
+                    ],
+                  ),
+                  title: Text(
+                    e.getDescription(),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: (_selectedIndex == index)
+                            ? FontWeight.bold
+                            : FontWeight.normal),
+                  ),
+                  subtitle: Text('\$' +
+                      (e.getAmount() / 100).toStringAsFixed(2) +
+                      ' paid ' +
+                      e.getFrequency().toString().split('.')[1].toLowerCase()),
+                  trailing: Text('\$' +
+                      (e.getMonthlyAmount() / 100).toStringAsFixed(2) +
+                      ' / month'),
+                ),
+              );
+            },
+          ),
+        ));
   }
 
   Future navigateToSignUp(context) async {
@@ -169,40 +212,5 @@ IconData getIcon(Category c) {
       return Icons.local_atm;
     default:
       return Icons.local_atm;
-  }
-}
-
-class ExpenseListItem extends StatelessWidget {
-  const ExpenseListItem({this.expense});
-  final Expense expense;
-
-  @override
-  Widget build(BuildContext context) {
-    IconData categoryIcon = getIcon(expense.getCategory());
-    return Container(
-      width: 500.0,
-      child: ListTile(
-        enabled: true,
-        dense: false,
-        leading: Column(
-          children: [
-            Icon(
-              categoryIcon,
-              color: Color(0xff37474f),
-              size: 24,
-            ),
-            // Text(expense.getCategory().toString().split('.')[1])
-          ],
-        ),
-        title: Text(expense.getDescription()),
-        subtitle: Text('\$' +
-            (expense.getAmount() / 100).toStringAsFixed(2) +
-            ' paid ' +
-            expense.getFrequency().toString().split('.')[1].toLowerCase()),
-        trailing: Text('\$' +
-            (expense.getMonthlyAmount() / 100).toStringAsFixed(2) +
-            ' / month'),
-      ),
-    );
   }
 }
