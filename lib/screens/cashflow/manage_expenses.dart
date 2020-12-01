@@ -253,7 +253,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
                             ),
                             RaisedButton(
                               color: Colors.lightGreen[300],
-                              child: Text('Add Expense'),
+                              child: Text('Add New Expense'),
                               onPressed: () {
                                 final List<Frequency> frequencies =
                                     Frequency.values;
@@ -491,7 +491,7 @@ IconData getIcon(Category c) {
     case Category.TRANSPORT:
       return Icons.local_taxi;
     case Category.ENTERTAINMENT:
-      return Icons.local_movies;
+      return Icons.live_tv;
     case Category.UTILITY:
       return Icons.bolt;
     case Category.MORTGAGE:
