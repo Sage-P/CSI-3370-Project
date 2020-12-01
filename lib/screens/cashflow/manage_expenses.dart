@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:modoh/models/category.dart';
 import 'package:modoh/models/expense.dart';
@@ -9,14 +7,15 @@ import 'package:modoh/screens/authenticate/home.dart';
 import 'package:modoh/screens/authenticate/login.dart';
 import 'package:modoh/screens/authenticate/signup.dart';
 
+final NetExpenses _netExpenses = new NetExpenses();
+final List<Expense> _expenseList = _netExpenses.getNetExpenses();
+
 class ManageExpenses extends StatefulWidget {
   @override
   _ManageExpensesState createState() => _ManageExpensesState();
 }
 
 class _ManageExpensesState extends State<ManageExpenses> {
-  NetExpenses _netExpenses;
-  List<Expense> _expenseList;
   int _selectedIndex;
   final List _isHovering = [
     false,
@@ -30,19 +29,6 @@ class _ManageExpensesState extends State<ManageExpenses> {
   ];
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      _netExpenses = new NetExpenses();
-      _netExpenses.addExpense(
-          1000000, Frequency.HALFANNUALLY, Category.UNIVERSITY, 'Tuition');
-      _netExpenses.addExpense(22500, Frequency.MONTHLY, Category.CAR, 'Lease');
-      _netExpenses.addExpense(45000, Frequency.MONTHLY, Category.RENT, 'Rent');
-      _netExpenses.addExpense(2000, Frequency.BIWEEKLY, Category.GAS, 'Gas');
-      _netExpenses.addExpense(
-          1300, Frequency.MONTHLY, Category.ENTERTAINMENT, 'Netflix');
-      _netExpenses.addExpense(
-          20000, Frequency.HALFANNUALLY, Category.UTILITY, 'Electricity');
-      _expenseList = _netExpenses.getNetExpenses();
-    });
     var screenSize = MediaQuery.of(context).size;
     return Scaffold(
         extendBodyBehindAppBar: true,
@@ -124,51 +110,196 @@ class _ManageExpensesState extends State<ManageExpenses> {
             ),
           ),
         ),
-        body: Center(
-          child: ListView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            itemCount: _netExpenses.size(),
-            itemBuilder: (context, index) {
-              Expense e = _expenseList[index];
-              IconData categoryIcon = getIcon(e.getCategory());
-              return Container(
-                width: 500.0,
-                child: ListTile(
-                  enabled: true,
-                  onTap: () {
-                    setState(() {
-                      _selectedIndex = index;
-                    });
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 62,
+              ),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Color(0xff37474f),
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                ),
+                child: Center(
+                    child: Text(
+                  'Expenses Dashboard',
+                  style: TextStyle(
+                      color: Color(0xff8adc16),
+                      fontFamily: 'Roboto',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18),
+                )),
+              ),
+              Expanded(
+                flex: 4,
+                child: ListView.builder(
+                  padding: EdgeInsets.fromLTRB(5, 8, 5, 5),
+                  itemCount: _netExpenses.size(),
+                  itemBuilder: (context, index) {
+                    Color _color =
+                        index.isOdd ? Colors.grey[200] : Colors.grey[300];
+                    Expense e = _expenseList[index];
+                    IconData categoryIcon = getIcon(e.getCategory());
+                    return Container(
+                      color: _color,
+                      child: ListTile(
+                        onTap: () {
+                          setState(() {
+                            if (_selectedIndex == index) {
+                              _selectedIndex = -1;
+                            } else {
+                              _selectedIndex = index;
+                            }
+                          });
+                        },
+                        selected: index == _selectedIndex,
+                        selectedTileColor: Color(0x7737474f),
+                        leading: Icon(categoryIcon,
+                            color: index == _selectedIndex
+                                ? Colors.white
+                                : Color(0xff37474f)),
+                        title: Text(e.getDescription(),
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'Roboto',
+                                color: index == _selectedIndex
+                                    ? Colors.white
+                                    : Color(0xff37474f))),
+                        subtitle: Text(
+                          '\$' +
+                              (e.getAmount() / 100).toStringAsFixed(2) +
+                              ' paid ' +
+                              e
+                                  .getFrequency()
+                                  .toString()
+                                  .split('.')[1]
+                                  .toLowerCase(),
+                          style: TextStyle(
+                              color: index == _selectedIndex
+                                  ? Colors.white
+                                  : Color(0xff37474f)),
+                        ),
+                        trailing: Text(
+                          !e.isHidden()
+                              ? '\$' +
+                                  (e.getMonthlyAmount() / 100)
+                                      .toStringAsFixed(2) +
+                                  ' / month'
+                              : '',
+                          style: TextStyle(
+                              color: _selectedIndex == index
+                                  ? Colors.white
+                                  : Color(0xff37474f)),
+                        ),
+                      ),
+                    );
                   },
-                  selected: index == _selectedIndex,
-                  selectedTileColor: Color(0xffe1e7ea),
-                  leading: Column(
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        categoryIcon,
-                        color: Color(0xff37474f),
-                        size: 24,
+                      Row(
+                        children: [
+                          RaisedButton(
+                            color: Colors.lightGreen[300],
+                            child: Text('Add Sample Expenses'),
+                            onPressed: () {
+                              setState(() {
+                                _netExpenses.addExpense(
+                                    1000000,
+                                    Frequency.HALFANNUALLY,
+                                    Category.UNIVERSITY,
+                                    'Tuition');
+                                _netExpenses.addExpense(22500,
+                                    Frequency.MONTHLY, Category.CAR, 'Lease');
+                                _netExpenses.addExpense(45000,
+                                    Frequency.MONTHLY, Category.RENT, 'Rent');
+                                _netExpenses.addExpense(2000,
+                                    Frequency.BIWEEKLY, Category.GAS, 'Gas');
+                                _netExpenses.addExpense(1300, Frequency.MONTHLY,
+                                    Category.ENTERTAINMENT, 'Netflix');
+                                _netExpenses.addExpense(
+                                    20000,
+                                    Frequency.HALFANNUALLY,
+                                    Category.UTILITY,
+                                    'Electricity');
+                              });
+                            },
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          RaisedButton(
+                            color: Colors.lightGreen[300],
+                            child: Text('Add Expense'),
+                            onPressed: () {
+                              _addExpensePanel();
+                            },
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          RaisedButton(
+                            color: Colors.lightGreen[300],
+                            child: Text('Remove Expense'),
+                            onPressed: (_netExpenses.size() > 0)
+                                ? () {
+                                    setState(() {
+                                      if (_selectedIndex != null &&
+                                          _selectedIndex >= 0 &&
+                                          _selectedIndex < _netExpenses.size())
+                                        _netExpenses.removeExpense(
+                                            _expenseList[_selectedIndex]);
+                                    });
+                                  }
+                                : null,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          RaisedButton(
+                            color: Colors.lightGreen[300],
+                            child: Text('Toggle Expense'),
+                            onPressed: (_netExpenses.size() > 0)
+                                ? () {
+                                    setState(() {
+                                      if (_selectedIndex != null &&
+                                          _selectedIndex >= 0 &&
+                                          _selectedIndex <
+                                              _netExpenses.size()) {
+                                        _netExpenses.toggleExpense(
+                                            _expenseList[_selectedIndex]);
+                                      }
+                                    });
+                                  }
+                                : null,
+                          )
+                        ],
+                      ),
+                      Text(
+                        '\$' +
+                            (_netExpenses.getNetExpensesMonthlyAmount() / 100)
+                                .toStringAsFixed(2) +
+                            ' / month',
+                        style: TextStyle(
+                            color: Color(0xff37474f),
+                            fontFamily: 'Roboto',
+                            fontSize: 20),
                       ),
                     ],
                   ),
-                  title: Text(
-                    e.getDescription(),
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: (_selectedIndex == index)
-                            ? FontWeight.bold
-                            : FontWeight.normal),
-                  ),
-                  subtitle: Text('\$' +
-                      (e.getAmount() / 100).toStringAsFixed(2) +
-                      ' paid ' +
-                      e.getFrequency().toString().split('.')[1].toLowerCase()),
-                  trailing: Text('\$' +
-                      (e.getMonthlyAmount() / 100).toStringAsFixed(2) +
-                      ' / month'),
                 ),
-              );
-            },
+              )
+            ],
           ),
         ));
   }
@@ -183,6 +314,17 @@ class _ManageExpensesState extends State<ManageExpenses> {
 
   Future navigateToLogIn(context) async {
     Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+  }
+
+  void _addExpensePanel() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
+            child: Text('Add a New Expense'),
+          );
+        });
   }
 }
 
