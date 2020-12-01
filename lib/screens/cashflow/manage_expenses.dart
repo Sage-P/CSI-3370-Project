@@ -242,7 +242,147 @@ class _ManageExpensesState extends State<ManageExpenses> {
                             color: Colors.lightGreen[300],
                             child: Text('Add Expense'),
                             onPressed: () {
-                              _addExpensePanel();
+                              final List<Frequency> frequencies =
+                                  Frequency.values;
+                              final List<Category> categories = Category.values;
+
+                              String _description;
+                              int _amountInCents;
+                              Frequency _frequency;
+                              Category _category;
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) {
+                                    return Container(
+                                      color: Color(0x5537474f),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 20.0, horizontal: 60.0),
+                                      child: Form(
+                                        // key: _formKey,
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              'Create a new Expense',
+                                              style: TextStyle(fontSize: 18),
+                                            ),
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            TextFormField(
+                                              decoration: InputDecoration(
+                                                  hintText:
+                                                      'How would you describe this expense?',
+                                                  fillColor: Colors.white,
+                                                  filled: true,
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color: Colors
+                                                                  .white,
+                                                              width: 2.0)),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color: Color(
+                                                                  0xcc37474f),
+                                                              width: 2.0))),
+                                              validator: (val) => val.isEmpty
+                                                  ? 'Please enter a description'
+                                                  : null,
+                                              onChanged: (val) => setState(
+                                                  () => _description = val),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            TextFormField(
+                                              decoration: InputDecoration(
+                                                  hintText:
+                                                      'How much is your expense? (Exclude the \$)',
+                                                  fillColor: Colors.white,
+                                                  filled: true,
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color: Colors
+                                                                  .white,
+                                                              width: 2.0)),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color: Color(
+                                                                  0xcc37474f),
+                                                              width: 2.0))),
+                                              validator: (val) => double.parse(
+                                                          val) >
+                                                      0.0
+                                                  ? 'Please enter a valid number.'
+                                                  : null,
+                                              onChanged: (val) => setState(() =>
+                                                  _amountInCents =
+                                                      (double.parse(val) * 100)
+                                                          as int),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            DropdownButtonFormField(
+                                                hint: Text(
+                                                    'How often do you pay above amount?'),
+                                                onChanged: (val) {
+                                                  setState(() {
+                                                    _frequency = val;
+                                                  });
+                                                },
+                                                items: frequencies.map((freq) {
+                                                  return DropdownMenuItem(
+                                                    value: freq,
+                                                    child: Text(
+                                                        'Paid ${freq.toString().split('.')[1].toLowerCase()}'),
+                                                  );
+                                                }).toList()),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            DropdownButtonFormField(
+                                                hint: Text(
+                                                    'How would you categorize this expense?'),
+                                                onChanged: (val) {
+                                                  setState(() {
+                                                    _category = val;
+                                                  });
+                                                },
+                                                items: categories.map((cate) {
+                                                  return DropdownMenuItem(
+                                                    value: cate,
+                                                    child: Text(
+                                                        '${cate.toString().split('.')[1]}'),
+                                                  );
+                                                }).toList()),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            RaisedButton(
+                                                color: Colors.lightGreen[300],
+                                                child: Text('Create'),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  setState(() {
+                                                    _netExpenses.addExpense(
+                                                        _amountInCents ?? 1000,
+                                                        _frequency ??
+                                                            Frequency.MONTHLY,
+                                                        _category ??
+                                                            Category.OTHERS,
+                                                        _description ??
+                                                            'Template');
+                                                  });
+                                                }),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  });
                             },
                           ),
                           SizedBox(
@@ -314,17 +454,6 @@ class _ManageExpensesState extends State<ManageExpenses> {
 
   Future navigateToLogIn(context) async {
     Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
-  }
-
-  void _addExpensePanel() {
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Container(
-            padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
-            child: Text('Add a New Expense'),
-          );
-        });
   }
 }
 
