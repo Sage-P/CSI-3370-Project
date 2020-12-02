@@ -36,6 +36,11 @@ class AuthService {
     }
   }
 
+  // auth change user stream
+  Stream<Student> get user {
+    return _auth.authStateChanges().map((User user) => _studentFromUser(user));
+  }
+
   // register with email & password
   Future registerWithEmailAndPassword(String email, String password) async {
     try {
@@ -55,4 +60,11 @@ class AuthService {
   }
 
   // sign out
+  Future signOut() async {
+    try {
+      return await _auth.signOut();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }

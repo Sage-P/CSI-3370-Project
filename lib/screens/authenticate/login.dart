@@ -571,6 +571,7 @@ class _LoginState extends State<Login> {
                                                 print('Logged in!');
                                                 print(result.email);
                                               }
+                                              Navigator.pop(context);
                                             }),
                                       ),
                                     ],

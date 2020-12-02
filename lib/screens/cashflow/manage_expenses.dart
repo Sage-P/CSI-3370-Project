@@ -6,6 +6,7 @@ import 'package:modoh/models/net_expenses.dart';
 import 'package:modoh/screens/authenticate/home.dart';
 import 'package:modoh/screens/authenticate/login.dart';
 import 'package:modoh/screens/authenticate/signup.dart';
+import 'package:modoh/services/auth.dart';
 
 final NetExpenses _netExpenses = new NetExpenses();
 final List<Expense> _expenseList = _netExpenses.getNetExpenses();
@@ -16,6 +17,7 @@ class ManageExpenses extends StatefulWidget {
 }
 
 class _ManageExpensesState extends State<ManageExpenses> {
+  final AuthService _auth = AuthService();
   int _selectedIndex;
   final List _isHovering = [
     false,
@@ -71,8 +73,10 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                   : _isHovering[0] = false;
                             });
                           },
-                          onTap: () {
-                            navigateToHome(context);
+                          onTap: () async {
+                            await _auth.signOut();
+                            print('Signed out!');
+                            Navigator.pop(context);
                           },
                           child: Column(
                             mainAxisSize: MainAxisSize.min,

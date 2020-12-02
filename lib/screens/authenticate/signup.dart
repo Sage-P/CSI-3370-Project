@@ -267,6 +267,7 @@ class _SignUpState extends State<SignUp> {
                                                 print('Signed up!');
                                                 print(result.email);
                                               }
+                                              Navigator.pop(context);
                                             }),
                                       ),
                                     ],
