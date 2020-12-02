@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:modoh/models/budget.dart';
 import 'package:modoh/models/student.dart';
+import 'package:modoh/services/database.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -46,6 +48,9 @@ class AuthService {
     try {
       UserCredential cred = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+
+      // create a new document for each new user
+      await DatabaseService(uid: cred.user.uid).updateUserData(new Budget());
       return _studentFromUser(cred.user);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {

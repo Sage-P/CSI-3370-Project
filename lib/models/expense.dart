@@ -69,6 +69,19 @@ class Expense {
     return _isHidden;
   }
 
+  Map<String, dynamic> toMap() {
+    String _frequencyString = _frequency.toString().split('.')[1];
+    String _categoryString = _category.toString().split('.')[1];
+    return {
+      'amount-in-cents': _amount,
+      'description': _description,
+      'frequency': _frequencyString,
+      'category': _categoryString,
+      'monthly-amount-in-cents': _monthlyAmount,
+      'is-hidden': _isHidden,
+    };
+  }
+
   String toString() {
     return "$_description ($_category):\n\t \$${(_amount / 100).toStringAsFixed(2)} per $_frequency \n\t \$${(_monthlyAmount / 100).toStringAsFixed(2)} per month";
   }
