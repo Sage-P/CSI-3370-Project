@@ -59,7 +59,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
                         ),
                       ),
                       onPressed: () {
-                        navigateToHome(context);
+                        Navigator.pop(context);
                       }),
                   Expanded(
                     child: Row(
