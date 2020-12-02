@@ -1,18 +1,18 @@
 import 'package:modoh/models/net_expenses.dart';
+import 'package:modoh/models/net_income.dart';
 
 class Budget {
   NetExpenses _netExpenses;
+  NetIncome _netIncome;
   int _netMonthlyCashflow;
+  double threshold;
 
   Budget() {
     _netExpenses = new NetExpenses();
+    _netIncome = new NetIncome();
     _netMonthlyCashflow = 0;
     _calculateNetMonthlyCashFlow();
   }
-
-  // List<Income> getListOfIncomes() {
-  //   return _netIncomes.getNetIncomes();
-  // }
 
   NetExpenses getListOfExpenses() {
     return _netExpenses;
@@ -24,7 +24,9 @@ class Budget {
   }
 
   void _calculateNetMonthlyCashFlow() {
-    _netMonthlyCashflow = 0 - _netExpenses.getNetExpensesMonthlyAmount();
+    _netMonthlyCashflow =
+        (_netIncome.getNetIncomeMonthlyAmount() * 100 as int) -
+            _netExpenses.getNetExpensesMonthlyAmount();
   }
 
   String toString() {
@@ -33,12 +35,16 @@ class Budget {
       return '-\$' +
           (_netMonthlyCashflow * -1 / 100).toStringAsFixed(2) +
           '\n' +
-          _netExpenses.toString();
+          _netExpenses.toString() +
+          '\n' +
+          _netIncome.toString();
     } else {
       return '\$' +
           (_netMonthlyCashflow / 100).toStringAsFixed(2) +
           '\n' +
-          _netExpenses.toString();
+          _netExpenses.toString() +
+          '\n' +
+          _netIncome.toString();
     }
   }
 }
