@@ -24,9 +24,8 @@ class Budget {
   }
 
   void _calculateNetMonthlyCashFlow() {
-    _netMonthlyCashflow =
-        (_netIncome.getNetIncomeMonthlyAmount() * 100 as int) -
-            _netExpenses.getNetExpensesMonthlyAmount();
+    _netMonthlyCashflow = _netIncome.getNetIncomeMonthlyAmount() -
+        _netExpenses.getNetExpensesMonthlyAmount();
   }
 
   String toString() {
