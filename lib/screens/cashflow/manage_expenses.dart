@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:modoh/models/budget.dart';
 import 'package:modoh/models/category.dart';
 import 'package:modoh/models/expense.dart';
 import 'package:modoh/models/frequency.dart';
 import 'package:modoh/models/net_expenses.dart';
+import 'package:modoh/models/student.dart';
 import 'package:modoh/screens/authenticate/home.dart';
 import 'package:modoh/screens/authenticate/login.dart';
 import 'package:modoh/screens/authenticate/signup.dart';
 import 'package:modoh/services/auth.dart';
-
-final NetExpenses _netExpenses = new NetExpenses();
-final List<Expense> _expenseList = _netExpenses.getNetExpenses();
+import 'package:modoh/services/database.dart';
+import 'package:provider/provider.dart';
 
 class ManageExpenses extends StatefulWidget {
   @override
@@ -29,8 +30,15 @@ class _ManageExpensesState extends State<ManageExpenses> {
     false,
     false
   ];
+
   @override
   Widget build(BuildContext context) {
+    Student _user = Provider.of<Student>(context);
+    Budget _budget = Provider.of<Budget>(context);
+    NetExpenses _netExpenses = _budget.getListOfExpenses();
+    _netExpenses.sortExpensesByMonthlyAmount();
+    List<Expense> _expenseList = _netExpenses.getNetExpenses();
+
     var screenSize = MediaQuery.of(context).size;
     return Scaffold(
         extendBodyBehindAppBar: true,
@@ -225,7 +233,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
                             RaisedButton(
                               color: Colors.lightGreen[300],
                               child: Text('Add Sample Expenses'),
-                              onPressed: () {
+                              onPressed: () async {
                                 setState(() {
                                   _netExpenses.addExpense(
                                       1000000,
@@ -250,6 +258,8 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                       'Electricity');
                                   _netExpenses.sortExpensesByMonthlyAmount();
                                 });
+                                await DatabaseService(uid: _user.uid)
+                                    .updateUserData(_budget);
                               },
                             ),
                             SizedBox(
@@ -388,8 +398,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                               RaisedButton(
                                                   color: Colors.lightGreen[300],
                                                   child: Text('Create'),
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
+                                                  onPressed: () async {
                                                     setState(() {
                                                       _netExpenses.addExpense(
                                                           _amountInCents ??
@@ -403,6 +412,11 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                                       _netExpenses
                                                           .sortExpensesByMonthlyAmount();
                                                     });
+                                                    await DatabaseService(
+                                                            uid: _user.uid)
+                                                        .updateUserData(
+                                                            _budget);
+                                                    Navigator.pop(context);
                                                   }),
                                             ],
                                           ),
@@ -418,15 +432,18 @@ class _ManageExpensesState extends State<ManageExpenses> {
                               color: Colors.lightGreen[300],
                               child: Text('Remove Expense'),
                               onPressed: (_netExpenses.size() > 0)
-                                  ? () {
+                                  ? () async {
                                       setState(() {
                                         if (_selectedIndex != null &&
                                             _selectedIndex >= 0 &&
                                             _selectedIndex <
-                                                _netExpenses.size())
+                                                _netExpenses.size()) {
                                           _netExpenses.removeExpense(
                                               _expenseList[_selectedIndex]);
+                                        }
                                       });
+                                      await DatabaseService(uid: _user.uid)
+                                          .updateUserData(_budget);
                                     }
                                   : null,
                             ),
@@ -437,7 +454,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
                               color: Colors.lightGreen[300],
                               child: Text('Toggle Expense'),
                               onPressed: (_netExpenses.size() > 0)
-                                  ? () {
+                                  ? () async {
                                       setState(() {
                                         if (_selectedIndex != null &&
                                             _selectedIndex >= 0 &&
@@ -447,6 +464,8 @@ class _ManageExpensesState extends State<ManageExpenses> {
                                               _expenseList[_selectedIndex]);
                                         }
                                       });
+                                      await DatabaseService(uid: _user.uid)
+                                          .updateUserData(_budget);
                                     }
                                   : null,
                             )
@@ -461,7 +480,7 @@ class _ManageExpensesState extends State<ManageExpenses> {
                               backgroundColor: Colors.white,
                               color: Color(0xff37474f),
                               fontFamily: 'Roboto',
-                              fontSize: 20),
+                              fontSize: 24),
                         ),
                       ],
                     ),

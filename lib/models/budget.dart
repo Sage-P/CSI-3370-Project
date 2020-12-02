@@ -1,4 +1,3 @@
-import 'package:modoh/models/expense.dart';
 import 'package:modoh/models/net_expenses.dart';
 
 class Budget {
@@ -29,6 +28,17 @@ class Budget {
   }
 
   String toString() {
-    return _netMonthlyCashflow.toString() + '\n' + _netExpenses.toString();
+    _calculateNetMonthlyCashFlow();
+    if (_netMonthlyCashflow < 0) {
+      return '-\$' +
+          (_netMonthlyCashflow * -1 / 100).toStringAsFixed(2) +
+          '\n' +
+          _netExpenses.toString();
+    } else {
+      return '\$' +
+          (_netMonthlyCashflow / 100).toStringAsFixed(2) +
+          '\n' +
+          _netExpenses.toString();
+    }
   }
 }

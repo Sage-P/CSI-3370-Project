@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:modoh/models/budget.dart';
 import 'package:modoh/screens/cashflow/manage_expenses.dart';
 import 'package:modoh/screens/cashflow/manage_incomes.dart';
 import 'package:modoh/services/auth.dart';
+import 'package:provider/provider.dart';
 
 class Cashflow extends StatefulWidget {
   @override
@@ -9,19 +11,29 @@ class Cashflow extends StatefulWidget {
 }
 
 class _CashflowState extends State<Cashflow> {
+  int _cashFlowAmount;
+  final AuthService _auth = new AuthService();
+  final List _isHovering = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final AuthService _auth = new AuthService();
-    final List _isHovering = [
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false
-    ];
+    final Budget _budget = Provider.of<Budget>(context) ?? new Budget();
+
+    if (_budget != null) {
+      setState(() {
+        _cashFlowAmount = _budget.getNetMonthlyCashFlow();
+      });
+    }
+
     var screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: PreferredSize(
@@ -103,43 +115,58 @@ class _CashflowState extends State<Cashflow> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Row(
+        child: Column(
           children: [
-            Expanded(
-              child: RaisedButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ManageIncomes()));
-                },
-                child: Container(
-                    height: screenSize.height,
-                    child: Center(
-                        child: Text(
-                      'Manage Incomes',
-                      style: TextStyle(fontSize: 24),
-                    ))),
-              ),
-            ),
-            SizedBox(
-              width: 20,
+            Container(
+              height: 200,
+              child: Center(
+                  child: Text(
+                '${_budget.toString().split('\n')[0]}',
+                style: TextStyle(
+                    fontSize: 40,
+                    color: (_cashFlowAmount > 0) ? Colors.green : Colors.red),
+              )),
             ),
             Expanded(
-              child: RaisedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ManageExpenses()));
-                },
-                child: Container(
-                    height: screenSize.height,
-                    child: Center(
-                        child: Text(
-                      'Manage Expenses',
-                      style: TextStyle(fontSize: 24),
-                    ))),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: RaisedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ManageIncomes()));
+                      },
+                      child: Container(
+                          child: Center(
+                              child: Text(
+                        'Manage Incomes',
+                        style: TextStyle(fontSize: 24),
+                      ))),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: RaisedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            fullscreenDialog: true,
+                            builder: (_) => ManageExpenses()));
+                      },
+                      child: Container(
+                          child: Center(
+                              child: Text(
+                        'Manage Expenses',
+                        style: TextStyle(fontSize: 24),
+                      ))),
+                    ),
+                  )
+                ],
               ),
-            )
+            ),
           ],
         ),
       ),
