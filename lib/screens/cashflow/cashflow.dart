@@ -124,7 +124,7 @@ class _CashflowState extends State<Cashflow> {
                 '${_budget.toString().split('\n')[0]}',
                 style: TextStyle(
                     fontSize: 40,
-                    color: (_cashFlowAmount > 0) ? Colors.green : Colors.red),
+                    color: (_cashFlowAmount >= 0) ? Colors.green : Colors.red),
               )),
             ),
             Expanded(
