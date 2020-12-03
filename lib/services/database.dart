@@ -3,7 +3,9 @@ import 'package:modoh/models/budget.dart';
 import 'package:modoh/models/category.dart';
 import 'package:modoh/models/expense.dart';
 import 'package:modoh/models/frequency.dart';
+import 'package:modoh/models/income.dart';
 import 'package:modoh/models/net_expenses.dart';
+import 'package:modoh/models/net_income.dart';
 
 class DatabaseService {
   final String uid;
@@ -13,20 +15,27 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('budgets');
 
   Future updateUserData(Budget budget) async {
-    Map<String, dynamic> data = {};
+    Map<String, dynamic> expenseData = {};
     for (Expense e in budget.getListOfExpenses().getNetExpenses()) {
-      data[e.getDescription()] = e.toMap();
+      expenseData[e.getDescription()] = e.toMap();
+    }
+
+    Map<String, dynamic> incomeData = {};
+    for (Income i in budget.getListOfIncomes().getNetIncome()) {
+      incomeData[i.getDescription()] = i.toMap();
     }
 
     return await budgetCollection.doc(uid).set({
       'net-cashflow-amount': budget.getNetMonthlyCashFlow(),
-      'expenses': data,
+      'expenses': expenseData,
+      'incomes': incomeData,
     });
   }
 
   Budget _budgetFromSnapshot(DocumentSnapshot snapshot) {
     Budget budget = new Budget();
     NetExpenses netExpenses = budget.getListOfExpenses();
+    NetIncome netIncome = budget.getListOfIncomes();
 
     Map<String, dynamic> expensesMap = snapshot.get('expenses');
 
@@ -44,6 +53,21 @@ class DatabaseService {
           netExpenses.addExpense(_amount, _frequency, _category, _description);
       if (_isHidden) e.toggleVisibility();
     });
+
+    Map<String, dynamic> incomesMap = snapshot.get('incomes');
+
+    incomesMap.entries.forEach((element) {
+      Map<String, dynamic> incomeFields = element.value;
+      int _amount = incomeFields['amount-in-cents'] ?? 10000;
+      Frequency _frequency =
+          _getFrequencyFromString(incomeFields['frequency']) ??
+              Frequency.MONTHLY;
+      String _description = incomeFields['description'] ?? 'TEMPLATE';
+      bool _isHidden = incomeFields['is-hidden'] ?? false;
+      Income i = netIncome.addIncome(_amount, _frequency, _description);
+      if (_isHidden) i.toggleVisibility();
+    });
+
     return budget;
   }
 

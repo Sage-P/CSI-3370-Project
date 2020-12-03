@@ -60,4 +60,15 @@ class Income {
   String toString() {
     return "$description : \n \t \$${(amount / 100).toStringAsFixed(2)} per $frequency \n \t \$${(monthlyamount / 100).toStringAsFixed(2)} per month.";
   }
+
+  Map<String, dynamic> toMap() {
+    String _frequencyString = frequency.toString().split('.')[1];
+    return {
+      'amount-in-cents': amount,
+      'description': description,
+      'frequency': _frequencyString,
+      'monthly-amount-in-cents': monthlyamount,
+      'is-hidden': isHidden,
+    };
+  }
 }

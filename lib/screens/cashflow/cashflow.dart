@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:modoh/models/budget.dart';
 import 'package:modoh/screens/cashflow/manage_expenses.dart';
-import 'package:modoh/screens/cashflow/manage_incomes.dart';
+import 'package:modoh/screens/cashflow/manage_income.dart';
+import 'package:modoh/screens/cashflow/notification.dart';
 import 'package:modoh/services/auth.dart';
 import 'package:provider/provider.dart';
 
@@ -33,8 +34,13 @@ class _CashflowState extends State<Cashflow> {
         _cashFlowAmount = _budget.getNetMonthlyCashFlow();
       });
     }
+    int _netIncomeMonthlyAmt =
+        _budget.getListOfIncomes().getNetIncomeMonthlyAmount();
+    int _netExpenseMonthlyAmt =
+        _budget.getListOfExpenses().getNetExpensesMonthlyAmount();
 
     var screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(screenSize.width, 1000),
@@ -136,7 +142,7 @@ class _CashflowState extends State<Cashflow> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ManageIncomes()));
+                                builder: (context) => ManageIncome()));
                       },
                       child: Container(
                           child: Center(
@@ -152,6 +158,18 @@ class _CashflowState extends State<Cashflow> {
                   Expanded(
                     child: RaisedButton(
                       onPressed: () {
+                        if (_netExpenseMonthlyAmt > _netIncomeMonthlyAmt) {
+                          sendSpendingNotification(100, context);
+                        } else if (_netExpenseMonthlyAmt >
+                            (0.75 * _netIncomeMonthlyAmt)) {
+                          sendSpendingNotification(75, context);
+                        } else if (_netExpenseMonthlyAmt >
+                            (0.50 * _netIncomeMonthlyAmt)) {
+                          sendSpendingNotification(50, context);
+                        } else if (_netExpenseMonthlyAmt >
+                            (0.25 * _netIncomeMonthlyAmt)) {
+                          sendSpendingNotification(25, context);
+                        }
                         Navigator.of(context).push(MaterialPageRoute(
                             fullscreenDialog: true,
                             builder: (_) => ManageExpenses()));

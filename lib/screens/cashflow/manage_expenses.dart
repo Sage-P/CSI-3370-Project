@@ -38,8 +38,8 @@ class _ManageExpensesState extends State<ManageExpenses> {
     NetExpenses _netExpenses = _budget.getListOfExpenses();
     _netExpenses.sortExpensesByMonthlyAmount();
     List<Expense> _expenseList = _netExpenses.getNetExpenses();
-
     var screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: PreferredSize(

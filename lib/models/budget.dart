@@ -14,6 +14,10 @@ class Budget {
     _calculateNetMonthlyCashFlow();
   }
 
+  NetIncome getListOfIncomes() {
+    return _netIncome;
+  }
+
   NetExpenses getListOfExpenses() {
     return _netExpenses;
   }
