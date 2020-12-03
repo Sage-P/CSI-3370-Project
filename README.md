@@ -3,7 +3,10 @@ A web application that strives to provide a versatile app for students to track 
 
 ### Prerequisites
 
-Students should be able to access and login to the app on any device that is connected to the internet and has a modern, updated web browser that supports dynamic web apps.
+* INSTALL the Flutter SDK
+* CONFIGURE your IDE for Flutter
+* ENABLE Flutter for Web
+* RUN from main.dart
 
 ## Usage
 
@@ -20,8 +23,12 @@ The main goal of this application is to help students track their money and keep
 ## Acknowledgments/Resource Crediting
 
 * Freepik
-* Flutter Dev and [Flutter YouTube](https://www.youtube.com/playlist?list=PLjxrf2q8roU23XGwz3Km7sQZFTdB996iG)
+* [Flutter Dev](https://flutter.dev/docs/development)
+* [Flutter YouTube](https://www.youtube.com/playlist?list=PLjxrf2q8roU23XGwz3Km7sQZFTdB996iG)
 * [Devefy](https://www.youtube.com/watch?v=87cz-ihAJ-8)
 * [Academind](https://www.youtube.com/watch?v=x0uinJvhNxI)
+* [FlutterFire](https://firebase.flutter.dev/docs/overview)
+* [Pub Dev](https://pub.dev/)
+* [The Net Ninja](https://www.youtube.com/watch?v=sfA3NWDBPZ4&list=PL4cUxeGkcC9j--TKIdkb3ISfRbJeJYQwC)
 
 
