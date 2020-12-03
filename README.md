@@ -1,7 +1,10 @@
 # Modoh - A Budgeting Tool for Students
 A web application that strives to provide a versatile app for students to track their cash flow, login, adjust their budgets with changes in income and expenses, and set limits. It aims to be an intuitive and functional tool for students to interact with.
 
-### Prerequisites
+### Prerequisites for Experience
+* Access the URL [Modoh](https://modoh-bcf0a.web.app/) from a modern web broswer!
+
+### Prerequisites for Code
 
 * INSTALL the Flutter SDK
 * CONFIGURE your IDE for Flutter
@@ -30,5 +33,6 @@ The main goal of this application is to help students track their money and keep
 * [FlutterFire](https://firebase.flutter.dev/docs/overview)
 * [Pub Dev](https://pub.dev/)
 * [The Net Ninja](https://www.youtube.com/watch?v=sfA3NWDBPZ4&list=PL4cUxeGkcC9j--TKIdkb3ISfRbJeJYQwC)
+* [Developer School](https://developer.school/hosting-a-flutter-web-project-on-firebase-hosting/)
 
 
